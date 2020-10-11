@@ -12,7 +12,7 @@ mydata = scale(mydata) # standardize variables
 d <- dist(mydata, method = "manhattan") # distance matrix
 source("C:\\Users\\benve\\Documents\\university\\year3\\CS3002\\Labs\\Lab 2\\WK_R.r")
 
-iter=20
+iter=20 # +1 to intended iter
 
 methods=c("single","complete","average","kmeans")
 
@@ -100,12 +100,6 @@ for(method in methods )
 
 
   
-
-
-
-
-
-
 
 
 
