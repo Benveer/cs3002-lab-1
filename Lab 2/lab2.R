@@ -14,37 +14,41 @@ source("C:\\Users\\benve\\Documents\\university\\year3\\CS3002\\Labs\\Lab 2\\WK_
 
 iter=20
 
-list=c("single","complete","average","kmeans")
+methods=c("single","complete","average","kmeans")
 
 matrixHCluster <- matrix('', iter, 2)
 matrixKMeans <- matrix('', iter, 2)
 matrixMeans <- matrix('', iter, 2)
 
 
-for(i in list )
+for(method in methods )
 {
   for(noOfClusters in 2:iter)
   {
     
     #Hierarchical clustering
-    #Average
+    #Average is best
     
     
-    if(isTRUE(list[i]!= "kmeans"))
+    if(isTRUE(method!= "kmeans"))
     {    
-    fit <- hclust(d, method=list[i])
-    #plot(fit) # display dendogram for each iter
+    fit <- hclust(d, method=method)
+
+    Hgroups <- cutree(fit, k=noOfClusters) # cut tree into x clusters
     
-    Hgroups <- cutree(fit, k=noOfClusters) # cut tree into 5 clusters
+    rect.hclust(fit, k=noOfClusters,border="red")  #Draws clusters on dendrogram
+
+    #plot(fit,main=paste(method,' Dendrogram ',noOfClusters," clusters"),xlab="Distance") # Plot dendrogram for each number of clusters
     
-    rect.hclust(fit, k=noOfClusters, border="red") 
+    
+    
     #plot(mydata, col=Hgroups) #display scatter plot for each iter of hcluster
     
     wk = WK_R( Hgroups,irisReal$X1)
     
     matrixMeans[noOfClusters,1]<- noOfClusters
     matrixMeans[noOfClusters,2]<- wk
-    print(wk)
+    #print(wk) #prints weighted kappa
     
     
     }
@@ -55,8 +59,8 @@ for(i in list )
       
       
       #Kmeans clustering
-      fit <- kmeans(mydata, noOfClusters) # 5 cluster solution
-      
+      fit <- kmeans(mydata, noOfClusters) 
+
       aggregate(mydata,by=list(fit$cluster),FUN=mean)
       
       Kgroups = fit$cluster 
@@ -68,17 +72,29 @@ for(i in list )
       matrixMeans[noOfClusters,1]<- noOfClusters
       matrixMeans[noOfClusters,2]<- wk
       
-      print(wk)
+      #print(wk) #prints weighted kappa
       
       
       
     }
 
+
+    
   }
+  plot(matrixMeans,main=method,xlab= "Number of Clusters", ylab= "Weight")
   
-  plot(matrixMeans,main="list[i]",xlab= "Number of Clusters", ylab= "Weight")
   
   
+  if(method!="kmeans")
+  {
+    
+    fit <- hclust(d, method=method)
+    plot(fit,main=paste(method,' Dendrogram'),xlab="Distance") # plots dendrogram at final iter
+    
+  }
+
+
+    
 }
   
 
