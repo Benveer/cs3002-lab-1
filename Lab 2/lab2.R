@@ -17,8 +17,7 @@ iter=5
 methods=c("single","complete","average","kmeans")
 
 
-#matrixHCluster <- matrix('', iter, 2)
-#matrixKMeans <- matrix('', iter, 2)
+
 matrixMeans <- matrix('', iter, 2)
 
 
