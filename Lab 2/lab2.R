@@ -12,42 +12,48 @@ mydata = scale(mydata) # standardize variables
 d <- dist(mydata, method = "manhattan") # distance matrix
 source("C:\\Users\\benve\\Documents\\university\\year3\\CS3002\\Labs\\Lab 2\\WK_R.r")
 
-iter=20 # +1 to intended iter
+iter=5
 
 methods=c("single","complete","average","kmeans")
 
-matrixHCluster <- matrix('', iter, 2)
-matrixKMeans <- matrix('', iter, 2)
+
+#matrixHCluster <- matrix('', iter, 2)
+#matrixKMeans <- matrix('', iter, 2)
 matrixMeans <- matrix('', iter, 2)
 
 
-for(method in methods )
+
+
+
+for(method in methods)
+  
 {
-  for(noOfClusters in 2:iter)
-  {
-    
+  for(i in 2:iter)
+   {
     #Hierarchical clustering
     #Average is best
-    
+    #noOfClusters<-i-1
     
     if(isTRUE(method!= "kmeans"))
     {    
     fit <- hclust(d, method=method)
 
-    Hgroups <- cutree(fit, k=noOfClusters) # cut tree into x clusters
+    plot(fit,main=paste(method,' Dendrogram ',i," clusters"),xlab="Distance") # Plot dendrogram for each number of clusters
     
-    rect.hclust(fit, k=noOfClusters,border="red")  #Draws clusters on dendrogram
+    
+    
+    Hgroups <- cutree(fit, k=i) # cut tree into x clusters
+    rect.hclust(fit, k=i,border="red")  #Draws clusters on dendrogram
+    
+    
 
-    #plot(fit,main=paste(method,' Dendrogram ',noOfClusters," clusters"),xlab="Distance") # Plot dendrogram for each number of clusters
-    
-    
     
     #plot(mydata, col=Hgroups) #display scatter plot for each iter of hcluster
     
     wk = WK_R( Hgroups,irisReal$X1)
     
-    matrixMeans[noOfClusters,1]<- noOfClusters
-    matrixMeans[noOfClusters,2]<- wk
+    matrixMeans[i,1]<- i
+    matrixMeans[i,2]<- wk
     #print(wk) #prints weighted kappa
     
     
@@ -57,9 +63,9 @@ for(method in methods )
     
     else{
       
-      
+      k=5
       #Kmeans clustering
-      fit <- kmeans(mydata, noOfClusters) 
+      fit <- kmeans(mydata, k) 
 
       aggregate(mydata,by=list(fit$cluster),FUN=mean)
       
@@ -69,8 +75,8 @@ for(method in methods )
       
       wk = WK_R( Kgroups,irisReal$X1)
       
-      matrixMeans[noOfClusters,1]<- noOfClusters
-      matrixMeans[noOfClusters,2]<- wk
+      matrixMeans[i,1]<- i
+      matrixMeans[i,2]<- wk
       
       #print(wk) #prints weighted kappa
       
@@ -88,8 +94,8 @@ for(method in methods )
   if(method!="kmeans")
   {
     
-    fit <- hclust(d, method=method)
-    plot(fit,main=paste(method,' Dendrogram'),xlab="Distance") # plots dendrogram at final iter
+   # fit <- hclust(d, method=method)
+  #  plot(fit,main=paste(method,' Dendrogram'),xlab="Distance") # plots dendrogram at final iter
     
   }
 
